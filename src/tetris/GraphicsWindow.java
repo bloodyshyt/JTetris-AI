@@ -13,13 +13,14 @@ import javax.swing.JPanel;
 public class GraphicsWindow extends JPanel {
 
 	Tetris tetris;
-	int delay = 30;
+	int delay = 1;
 	int[][] board;
 
 	public GraphicsWindow() {
 		setDoubleBuffered(true);
-		tetris = new Tetris();
-	}
+		//tetris = new Tetris();
+		tetris = new Tetris(new double[] {-2.93, 4.83, -2.99, 3.39, 3.93, 2.16, 4.33 });
+	} 
 
 	public void start() {
 		while(!tetris.gameOver) {

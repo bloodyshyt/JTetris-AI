@@ -10,6 +10,7 @@ public class Tetris {
 	int piece, px, py, pr;
 	int opx, opy;
 	int linesCleared;
+	int score;
 	boolean gameOver = false;
 	TetrisAI bot;
 
@@ -24,13 +25,21 @@ public class Tetris {
 
 	public Tetris() {
 		this(12, 30);
+		if(bot == null)
+			bot = new TetrisAI(this);
 	}
 	
-	public void start() {
+	public Tetris(double[] weights) {
+		this();
+		bot = new TetrisAI(this, weights);
+	}
+	
+	
+	public int start() {
 		while(!gameOver) {
 			//Scanner in = new Scanner(System.in);
-			System.out.println("Current piece: " + piece);
-			System.out.println("Current orientation: " + pr);
+			//System.out.println("Current piece: " + piece);
+			//System.out.println("Current orientation: " + pr);
 			//System.out.print("Enter orientation and x: ");
 			//pr = in.nextInt();
 			//px = in.nextInt();
@@ -39,10 +48,12 @@ public class Tetris {
 			px = move[0];
 			pr = move[1];
 			drop();
-			print();
-			System.out.println("Lines cleared: " + linesCleared);
+			//print();
+			//System.out.println("Lines cleared: " + linesCleared);
 			nextPiece();
 		}
+		System.out.println("Lined cleared: " +  linesCleared);
+		return linesCleared;
 	}
 	
 	public int[][] playMove() {
@@ -51,7 +62,9 @@ public class Tetris {
 		pr = move[1];
 		drop();
 		print();
-		System.out.println("Lines cleared: " + linesCleared);
+		System.out.println("Agg height: " + bot.faggregateHeight.evaluate());
+		System.out.println("Bumpiness: " + bot.fbumpiness.evaluate());
+		System.out.println("Lines cleareddd: " + linesCleared);
 		nextPiece();
 		return getBoard();
 	}
@@ -112,8 +125,7 @@ public class Tetris {
 		nextPiece();
 		drawboard = true;
 		linesCleared = 0;
-		bot = new TetrisAI(this);
-
+		score = 0;
 	}
 	
 	public boolean spaceFor(int x, int y, int[] piece) {
@@ -158,7 +170,7 @@ public class Tetris {
 	}
 	
 	public boolean drop() {
-		System.out.println("Dropping, piece: " + piece + " px: " +px + " pr: " + pr);
+		//System.out.println("Dropping, piece: " + piece + " px: " +px + " pr: " + pr);
 		while(!parkPiece(px, py, pieces[piece][pr]))
 			py++;
 		fixPiece();
